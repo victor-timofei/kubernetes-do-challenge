@@ -1,0 +1,14 @@
+PATH=${PWD}/bin/:$PATH
+EMAIL_ADDRESS="${EMAIL_ADDRESS:-kubernetesadmin@example.org}"
+KUBECTL_BIN="${KUBECTL_BIN:-kubectl}"
+INSTALL_DIR="${INSTALL_DIR:-$(pwd)/bin}"
+HELM_BIN="${INSTALL_DIR}/helm"
+ARGOCD_BIN="${INSTALL_DIR}/argocd"
+
+
+export PATH \
+	EMAIL_ADDRESS \
+	KUBECTL_BIN \
+	INSTALL_DIR \
+	HELM_BIN \
+	ARGOCD_BIN
