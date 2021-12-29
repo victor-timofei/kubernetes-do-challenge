@@ -29,6 +29,8 @@ function install_argocd_full {
 function install_tekton {
 	${KUBECTL_BIN} apply \
 		-f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+	${KUBECTL_BIN} apply \
+		-f https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
 }
 
 mkdir -pv "${INSTALL_DIR}"
