@@ -31,6 +31,11 @@ function install_tekton {
 		-f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 	${KUBECTL_BIN} apply \
 		-f https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
+	${KUBECTL_BIN} create configmap config-artifact-pvc \
+		--from-literal=size=10Gi \
+		--from-literal=storageClassName=manual \
+		-o yaml -n tekton-pipelines \
+		--dry-run=client | ${KUBECTL_BIN} replace -f -
 }
 
 mkdir -pv "${INSTALL_DIR}"
