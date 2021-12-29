@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
-source env
-source logger.sh
+source ./env
+source ./logger.sh
 
 function install_helm {
 	curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
