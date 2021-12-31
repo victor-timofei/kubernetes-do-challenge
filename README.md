@@ -26,12 +26,20 @@ Run the `install.sh` script, which will install Helm, Nginx Ingress controller, 
 
 Update the DNS records to point to the load balancer. You can find the IP address of your load balancer in the Digital Ocean
 dashboard.
+![Screenshot 2021-12-31 at 16-17-48 Load Balancers - DigitalOcean](https://user-images.githubusercontent.com/18060662/147827828-ba0a3f69-fc90-4a69-8f4f-582c7a62f27f.png)
 
 Install cert-manager and create Ingress for ArgoCD.
 ```sh
 DOMAIN=my.domain EMAIL_ADDRESS=victor@my.domain ./install-cert-manager.sh
 ```
 
+You can now login to the ArgoCD UI at [https://argocd.MYDOMAIN](https://argocd.k8s-argocd.tk/).
+![Screenshot 2021-12-31 at 16-15-05 Argo CD](https://user-images.githubusercontent.com/18060662/147827715-fe5ebf3c-d16d-4029-9e84-ef5d597e4366.png)
+
+You can get the admin password by running:
+```sh
+./get-argocd-admin-password.sh
+```
 ## Create the pipeline
 To create the pipeline fork the [tekton pipeline](https://github.com/victor-timofei/tekton-example-pipeline)
 and the [application repo](https://github.com/victor-timofei/tekton-pipeline-example-app).
@@ -151,11 +159,17 @@ argocd repo add <pipeline_repo_url> --username $SCM_USERNAME --password $SCM_PAT
 argocd repo add <app_repo_url> --username $SCM_USERNAME --password $SCM_PAT
 ```
 
+After this step the repositories should be visible in the ArgoCD Settings.
+![Screenshot 2021-12-31 at 16-08-44 Repositories Settings - Argo CD](https://user-images.githubusercontent.com/18060662/147827489-7bd47079-8945-46d0-ab04-d2c1b4b24952.png)
+
 Create the ArgoCD applications:
 ```sh
 argocd app create tekton-pipeline-app --repo <pipeline_repo_url> --path tekton-pipeline --dest-server https://kubernetes.default.svc --dest-namespace tekton-argocd-example
 argocd app create 2048-game-app --repo <app_repo> --path kustomize --dest-server https://kubernetes.default.svc --dest-namespace game-2048 --sync-option CreateNamespace=true
 ```
+
+After this step the applications should be appear in the ArgoCD Dashboard.
+![Screenshot 2021-12-31 at 16-06-56 Applications - Argo CD](https://user-images.githubusercontent.com/18060662/147827522-f9404e0e-6e83-4c29-bec1-ba5335e96d1d.png)
 
 Sync the tekton pipeline:
 ```sh
@@ -166,12 +180,20 @@ Great, now our entire CI/CD pipeline is on Git and is managed by ArgoCD using th
 
 Register the tekton webhook with your git provider.
 The webhook should be like `https://k8s-argocd.tk/tekton-argocd-example-build-webhook`.
+![Screenshot 2021-12-31 at 16-19-55 victor-timofei tekton-pipeline-example-app](https://user-images.githubusercontent.com/18060662/147827863-6c2a46ed-f6d8-48bb-942c-8a965acfb0fb.png)
 
 Now you everytime you push to your default application branch the pipeline is triggered, your
 application is built and push to the container registry and finally it is deployed.
 
+You can also see the application docker image at the [docker registry](https://hub.docker.com/repository/docker/vtimofei/hello-app).
+![Screenshot 2021-12-31 at 16-22-00 Docker Hub](https://user-images.githubusercontent.com/18060662/147827980-744aa3d6-ab1c-40d9-97a0-853bf63e3ccc.png)
+
+The application has been deployed [here](https://k8s-argocd.tk/).
+![Screenshot 2021-12-31 at 16-12-40 2048](https://user-images.githubusercontent.com/18060662/147827596-9db56e3a-40ab-4a43-9e6e-a3e22fa0b71f.png)
+
 ## Resources
-1. [How To Set Up an Nginx Ingress on DigitalOcean Kubernetes Using Helm](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-on-digitalocean-kubernetes-using-helm)
+1. [How To Set Up an Nginx![Uploading Screenshot 2021-12-31 at 16-22-00 Docker Hub.png…]()
+ Ingress on DigitalOcean Kubernetes Using Helm](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-on-digitalocean-kubernetes-using-helm)
 2. [Installing Ambassador, ArgoCD, and Tekton on Kubernetes](https://medium.com/dzerolabs/installing-ambassador-argocd-and-tekton-on-kubernetes-540aacc983b9)
 3. [Kubernetes-Native Build & Release Pipelines with Tekton and ArgoCD](https://medium.com/dzerolabs/using-tekton-and-argocd-to-set-up-a-kubernetes-native-build-release-pipeline-cf4f4d9972b0)
 4. [Free SSL for Kubernetes with Cert-Manager](https://www.youtube.com/watch?v=hoLUigg4V18)
