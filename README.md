@@ -3,6 +3,18 @@ Kubernetes Digital Ocean Challenge
 
 [Deploy a GitOps CI/CD implementation](https://www.digitalocean.com/community/pages/kubernetes-challenge#anchor--challenges)
 
+## Introduction
+This repository is part of Digital Ocean's 2021 Kubernetes Challenge and it is an example of a GitOps CI/CD pipeline using
+ArgoCD and tekton.
+
+This example is heavily based on the article [Kubernetes-Native Build & Release Pipelines with Tekton and ArgoCD](https://medium.com/dzerolabs/using-tekton-and-argocd-to-set-up-a-kubernetes-native-build-release-pipeline-cf4f4d9972b0).
+
+## What the pipeline does
+
+This CI/CD pipeline has two tasks:
+1. Build the application image.
+2. Deploy the application.
+
 ## Installation
 Before starting the installation you should have a new Kubernetes cluster up and running, and kubectl should be configured
 to have access to it.
@@ -157,3 +169,10 @@ The webhook should be like `https://k8s-argocd.tk/tekton-argocd-example-build-we
 
 Now you everytime you push to your default application branch the pipeline is triggered, your
 application is built and push to the container registry and finally it is deployed.
+
+## Resources
+1. [How To Set Up an Nginx Ingress on DigitalOcean Kubernetes Using Helm](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-on-digitalocean-kubernetes-using-helm)
+2. [Installing Ambassador, ArgoCD, and Tekton on Kubernetes](https://medium.com/dzerolabs/installing-ambassador-argocd-and-tekton-on-kubernetes-540aacc983b9)
+3. [Kubernetes-Native Build & Release Pipelines with Tekton and ArgoCD](https://medium.com/dzerolabs/using-tekton-and-argocd-to-set-up-a-kubernetes-native-build-release-pipeline-cf4f4d9972b0)
+4. [Free SSL for Kubernetes with Cert-Manager](https://www.youtube.com/watch?v=hoLUigg4V18)
+5. [Tekton Documentation](https://tekton.dev/docs/)
