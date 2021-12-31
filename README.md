@@ -4,23 +4,27 @@ Kubernetes Digital Ocean Challenge
 [Deploy a GitOps CI/CD implementation](https://www.digitalocean.com/community/pages/kubernetes-challenge#anchor--challenges)
 
 ## Installation
+Before starting the installation you should have a new Kubernetes cluster up and running, and kubectl should be configured
+to have access to it.
 
 Run the `install.sh` script, which will install Helm, Nginx Ingress controller, ArgoCD, and tekton.
 ```sh
 ./install.sh
 ```
 
-Update the DNS records to point to the load balancer.
+Update the DNS records to point to the load balancer. You can find the IP address of your load balancer in the Digital Ocean
+dashboard.
+
 Install cert-manager and create Ingress for ArgoCD.
 ```sh
 DOMAIN=my.domain EMAIL_ADDRESS=victor@my.domain ./install-cert-manager.sh
 ```
 
 ## Create the pipeline
-To create the pipeline fork the `https://github.com/victor-timofei/tekton-example-pipeline` repo.
-You should also fork the application repo `https://github.com/victor-timofei/tekton-pipeline-example-app`.
+To create the pipeline fork the [tekton pipeline](https://github.com/victor-timofei/tekton-example-pipeline)
+and the [application repo](https://github.com/victor-timofei/tekton-pipeline-example-app).
 
-Create the secrets inside the `tekton-pipeline/resources/secrets` directory.
+First we'll need to create the secrets inside the `tekton-pipeline/resources/secrets` directory.
 You can get the ArgoCD admin password by running the `get-argocd-admin-password.sh` script from
 this repo.
 
@@ -146,7 +150,10 @@ Sync the tekton pipeline:
 argocd app sync tekton-pipeline-app --prune
 ```
 
-Register the tekton webhook with your git provider. The webhook should be like `https://k8s-argocd.tk/tekton-argocd-example-build-webhook`.
+Great, now our entire CI/CD pipeline is on Git and is managed by ArgoCD using the GitOps principles.
+
+Register the tekton webhook with your git provider.
+The webhook should be like `https://k8s-argocd.tk/tekton-argocd-example-build-webhook`.
 
 Now you everytime you push to your default application branch the pipeline is triggered, your
 application is built and push to the container registry and finally it is deployed.
